@@ -1,0 +1,125 @@
+できます！LEO WAS HERE
+今度は黒い画面に緑の0と1が上から下へ大量に落ちる、映画のマトリックス風にします。
+
+メモ帳の中身を全部消して、これを貼ってください。
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Rain</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #title {
+      position: fixed;
+      top: 20px;
+      left: 25px;
+      color: #00ff00;
+      font-family: Consolas, monospace;
+      font-size: 22px;
+      text-shadow: 0 0 10px #00ff00;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="title">LOCATION FINDING... // DIGITAL RAIN</div>
+
+<canvas id="matrix"></canvas>
+
+<script>
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+resize();
+window.addEventListener("resize", resize);
+
+const fontSize = 18;
+let columns = Math.floor(canvas.width / fontSize);
+let drops = [];
+
+function resetDrops() {
+  columns = Math.floor(canvas.width / fontSize);
+  drops = [];
+
+  for (let i = 0; i < columns; i++) {
+    drops[i] = Math.random() * -100;
+  }
+}
+
+resetDrops();
+
+const chars = "01";
+
+function draw() {
+
+  // 黒を少し透明にして残像を作る
+  ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.font = fontSize + "px Consolas, monospace";
+
+  for (let i = 0; i < drops.length; i++) {
+
+    const char = chars[Math.floor(Math.random() * chars.length)];
+
+    // たまに明るい文字
+    if (Math.random() < 0.05) {
+      ctx.fillStyle = "#ffffff";
+      ctx.shadowColor = "#00ff00";
+      ctx.shadowBlur = 15;
+    } else {
+      ctx.fillStyle = "#00ff00";
+      ctx.shadowColor = "#00ff00";
+      ctx.shadowBlur = 5;
+    }
+
+    ctx.fillText(
+      char,
+      i * fontSize,
+      drops[i] * fontSize
+    );
+
+    ctx.shadowBlur = 0;
+
+    // 下まで行ったら上に戻る
+    if (
+      drops[i] * fontSize > canvas.height &&
+      Math.random() > 0.975
+    ) {
+      drops[i] = 0;
+    }
+
+    drops[i]++;
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+window.addEventListener("resize", resetDrops);
+</script>
+
+</body>
+</html>
